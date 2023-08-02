@@ -8,13 +8,18 @@
 
 class Game: public QGraphicsView
 {
+    Q_OBJECT
 public:
     //constructor
     Game(QWidget* parent = nullptr);
 
-    //function
+    //public function
+    void DisplayMainMenu();
+
+public slots:
     void start();
 
+public:
     //member
     QGraphicsScene* m_gScene;
     HexBoard* m_gHexBoard;
