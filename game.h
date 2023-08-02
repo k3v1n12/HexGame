@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include "Utils.h"
 #include "hexboard.h"
+#include<random>
 
 
 class Game: public QGraphicsView
@@ -49,6 +50,7 @@ public:
 private:
     QList<Hex* >m_gPlayer1Cards;
     QList<Hex* >m_gPlayer2Cards;
+    std::mt19937 m_rRandomEngine;
 };
 
 #endif // GAME_H

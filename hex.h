@@ -21,18 +21,17 @@ public:
     void setOwner(Player player);
     void setIsPlaced(bool value);
 
+    //public method
+    void displaySideAttack();
+
     //event
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 private:
     Player m_eOwner;
     bool m_bisPlaced;
-    int m_nSide0Attack;
-    int m_nSide1Attack;
-    int m_nSide2Attack;
-    int m_nSide3Attack;
-    int m_nSide4Attack;
-    int m_nSide5Attack;
+    int m_lSideAttack[6];
+    QList<QGraphicsTextItem*> m_lAttackTexts;
 
 };
 

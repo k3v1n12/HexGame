@@ -9,6 +9,7 @@ const int SCALE_BY = 40;
 Hex::Hex(QGraphicsItem *parent)
     :m_eOwner(Noone)
     ,m_bisPlaced(true)
+    ,m_lSideAttack{}
 {
     // draw the polygon
     QVector<QPointF> hexPoints;
@@ -20,6 +21,38 @@ Hex::Hex(QGraphicsItem *parent)
     }
 
     setPolygon(hexPoints);
+
+    //create QGraphicsTextItem to visualise each side's attack
+    QGraphicsTextItem* text0 = new QGraphicsTextItem(QString::number(0), this);
+    QGraphicsTextItem* text1 = new QGraphicsTextItem(QString::number(0), this);
+    QGraphicsTextItem* text2 = new QGraphicsTextItem(QString::number(0), this);
+    QGraphicsTextItem* text3 = new QGraphicsTextItem(QString::number(0), this);
+    QGraphicsTextItem* text4 = new QGraphicsTextItem(QString::number(0), this);
+    QGraphicsTextItem* text5 = new QGraphicsTextItem(QString::number(0), this);
+
+    //add it to list to track it
+    m_lAttackTexts.append(text0);
+    m_lAttackTexts.append(text1);
+    m_lAttackTexts.append(text2);
+    m_lAttackTexts.append(text3);
+    m_lAttackTexts.append(text4);
+    m_lAttackTexts.append(text5);
+
+    //set their position in hex
+    text0->setPos(50, 0);
+    text1->setPos(20, 15);
+    text2->setPos(20, 40);
+    text3->setPos(50, 55);
+    text4->setPos(80, 40);
+    text5->setPos(80, 15);
+
+    //set all attacktexts to be invincible
+    foreach(auto item, m_lAttackTexts) {
+        item->setVisible(false);
+    }
+
+
+
 }
 
 Player Hex::getOwner()
@@ -30,6 +63,12 @@ Player Hex::getOwner()
 bool Hex::getIsPlaced()
 {
     return m_bisPlaced;
+}
+
+void Hex::setAttackof(int side, int value)
+{
+    m_lSideAttack[side] = value;
+    m_lAttackTexts[side]->setPlainText(QString::number(value));
 }
 
 void Hex::setOwner(Player player)   {
@@ -61,6 +100,13 @@ void Hex::setOwner(Player player)   {
 void Hex::setIsPlaced(bool value)
 {
     m_bisPlaced = value;
+}
+
+void Hex::displaySideAttack() {
+
+    foreach(auto item, m_lAttackTexts) {
+        item->setVisible(true);
+    }
 }
 
 void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event)  {

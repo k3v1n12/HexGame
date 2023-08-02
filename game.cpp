@@ -17,6 +17,10 @@ Game::Game(QWidget *parent)
     m_gScene->setSceneRect(0, 0, 1024, 650);
     setScene(m_gScene);
 
+    //seed random number to generate random attack value
+    std::random_device rd; // Seed for random engine.
+    m_rRandomEngine.seed(rd());
+
 }
 
 void Game::start()  {
@@ -73,6 +77,13 @@ void Game::createNewCard(Player player) {
     card->setOwner(player);
     card->setIsPlaced(false);
 
+    //randomise side attack of card
+    std::uniform_int_distribution<int> distribution(1, 6);
+    for(auto i = 0; i < 6; i++) {
+        int randomNum = distribution(m_rRandomEngine);
+        card->setAttackof(i, randomNum);
+    }
+    card->displaySideAttack();
     //add to proper list
     if(player == Player1) {
         m_gPlayer1Cards.append(card);
