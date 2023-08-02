@@ -16,6 +16,6 @@ Game::Game(QWidget *parent) {
 
 void Game::start()  {
     m_gHexBoard  = new HexBoard();
-    m_gHexBoard->placeHexes();
+    m_gHexBoard->placeHexes(100, 100, 5, 5);
 
 }

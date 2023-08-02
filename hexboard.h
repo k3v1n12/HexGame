@@ -12,7 +12,7 @@ public:
     QList<Hex*> getHexes();
 
     //public function
-    void placeHexes();
+    void placeHexes(int x, int y, int nCols, int nRows);
 
 private:
     void createHexColumn(int x, int y, int nRows);
