@@ -1,6 +1,5 @@
 #include "game.h"
 #include "button.h"
-#include<QDebug>
 
 
 Game::Game(QWidget *parent)
@@ -216,8 +215,6 @@ void Game::setCurrentPlayer(Player nextPlayer)
 void Game::pickUpCard(Hex *card)
 {
     if(card->getOwner() == getCurrentPlayer() && !m_gCardToPlace) {
-        qDebug() << "Card is being picked up";
-        qDebug() << getCurrentPlayer();
         m_gCardToPlace = card;
         m_pOriginalPos = card->pos();
         return;
@@ -228,7 +225,6 @@ void Game::placeCard(Hex *hexToReplace)
 {
     //Replaces the specified Hex to card to place
     if(m_gCardToPlace) {
-        qDebug() <<"Card is Place";
         m_gCardToPlace->setPos(hexToReplace->pos());
         m_gHexBoard->getHexes().removeAll(hexToReplace);
         m_gHexBoard->getHexes().append(m_gCardToPlace);
@@ -237,6 +233,9 @@ void Game::placeCard(Hex *hexToReplace)
 
         m_gCardToPlace->setIsPlaced(true);
         removeFromDeck(m_gCardToPlace, getCurrentPlayer());
+
+        //find neighbours
+        m_gCardToPlace->findNeighbours();
 
         m_gCardToPlace = nullptr;
 

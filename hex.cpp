@@ -1,6 +1,7 @@
 #include "hex.h"
 #include <QBrush>
 #include "game.h"
+#include <QDebug>
 
 extern Game* game;
 
@@ -21,6 +22,9 @@ Hex::Hex(QGraphicsItem *parent)
     }
 
     setPolygon(hexPoints);
+
+    //create lines
+    createLines();
 
     //create QGraphicsTextItem to visualise each side's attack
     QGraphicsTextItem* text0 = new QGraphicsTextItem(QString::number(0), this);
@@ -106,6 +110,35 @@ void Hex::displaySideAttack() {
 
     foreach(auto item, m_lAttackTexts) {
         item->setVisible(true);
+    }
+}
+
+void Hex::createLines() {
+    QPointF hexCenter(x() + 60, y() + 40);
+    QPointF finalPoint(hexCenter.x(), hexCenter.y() - 60);
+    QLineF ln(hexCenter, finalPoint);
+    for(auto i = 0; i < 6; i++) {
+        QLineF lnCopy(ln);
+        lnCopy.setAngle(90 + 60 * i);
+        QGraphicsLineItem* line = new QGraphicsLineItem(lnCopy, this);
+        line->setVisible(false);
+        m_lLines.append(line);
+
+    }
+}
+
+void Hex::findNeighbours() {
+
+    foreach(auto line, m_lLines) {
+        //if line collidings it an item of type hex, add it to neighbour
+        QList<QGraphicsItem*> colliding = line->collidingItems();
+        foreach(auto collide, colliding) {
+            auto item{dynamic_cast<Hex*>(collide)};
+            if(item !=this && item) {
+                m_lNeighbours.append(item);
+                qDebug()<<item->pos();
+            }
+        }
     }
 }
 

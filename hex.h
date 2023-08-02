@@ -23,6 +23,8 @@ public:
 
     //public method
     void displaySideAttack();
+    void createLines();
+    void findNeighbours();
 
     //event
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
@@ -32,6 +34,8 @@ private:
     bool m_bisPlaced;
     int m_lSideAttack[6];
     QList<QGraphicsTextItem*> m_lAttackTexts;
+    QList<Hex*> m_lNeighbours;
+    QList<QGraphicsLineItem*> m_lLines;
 
 };
 
