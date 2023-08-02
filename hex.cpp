@@ -14,3 +14,7 @@ Hex::Hex(QGraphicsItem *parent) {
 
     setPolygon(hexPoints);
 }
+
+void Hex::setOwner(Player player)   {
+    m_eOwner = player;
+}

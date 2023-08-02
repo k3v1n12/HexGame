@@ -15,6 +15,7 @@ public:
 
     //setter
     void setAttackof(int side, int value);
+    void setOwner(Player player);
 
 private:
     Player m_eOwner;
