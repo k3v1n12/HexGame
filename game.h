@@ -2,11 +2,9 @@
 #define GAME_H
 
 #include <QGraphicsView>
+#include "Utils.h"
+#include "hexboard.h"
 
-enum Player{
-    Player1,
-    Player2
-};
 
 class Game: public QGraphicsView
 {
@@ -19,7 +17,7 @@ public:
 
     //member
     QGraphicsScene* m_gScene;
-    //HexBoard* m_gHexBoard;
+    HexBoard* m_gHexBoard;
     Player m_eCurrentPlayer;
 
 };
