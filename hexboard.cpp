@@ -7,6 +7,11 @@ HexBoard::HexBoard()    {
 
 }
 
+QList<Hex *> HexBoard::getHexes()
+{
+    return hexes;
+}
+
 void HexBoard::placeHexes(int x, int y, int nCols, int nRows) {
 
     int XSHIFT = 82;
@@ -23,6 +28,7 @@ void HexBoard::createHexColumn(int x, int y, int nRows) {
         hex->setPos(x, y + YSHIFT * i);
         hexes.append(hex);
         game->m_gScene->addItem(hex);
+        hex->setOwner(Noone);
 
     }
 }

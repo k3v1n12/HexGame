@@ -3,7 +3,8 @@
 
 enum Player{
     Player1,
-    Player2
+    Player2,
+    Noone
 };
 
 #endif // UTILS_H
