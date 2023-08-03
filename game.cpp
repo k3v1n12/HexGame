@@ -5,6 +5,7 @@
 Game::Game(QWidget *parent)
     :m_eCurrentPlayer(Player1)
     ,m_gCardToPlace(nullptr)
+    ,m_numCardsPlaced(0)
 {
     //set up screen
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -26,10 +27,23 @@ void Game::start()  {
     //clear screen
     m_gScene->clear();
 
+    m_eCurrentPlayer = Player1;
+    m_gCardToPlace = nullptr;
+    m_numCardsPlaced = 0;
+
     m_gHexBoard  = new HexBoard();
-    m_gHexBoard->placeHexes(210, 30, 7, 7);
+    m_gHexBoard->placeHexes(210, 30, 3, 3);
     drawGUI();
     createInitialCards();
+}
+
+void Game::restartGame() {
+    m_gPlayer1Cards.clear();
+    m_gPlayer2Cards.clear();
+    m_gHexBoard->getHexes().clear();
+    m_gScene->clear();
+
+    start();
 }
 
 void Game::drawPanel(int x, int y, int width, int height, QColor color, double opacity) {
@@ -236,6 +250,7 @@ void Game::placeCard(Hex *hexToReplace)
 
         //find neighbours
         m_gCardToPlace->findNeighbours();
+        m_gCardToPlace->captureNeighbour();
 
         m_gCardToPlace = nullptr;
 
@@ -243,7 +258,76 @@ void Game::placeCard(Hex *hexToReplace)
         createNewCard(getCurrentPlayer());
         //make it next players turn
         nextPlayersTurn();
+
+        m_numCardsPlaced ++;
+        if(m_numCardsPlaced >= m_gHexBoard->getHexes().size()) {
+            gameOver();
+        }
     }
+}
+
+void Game::gameOver(){
+
+    int nPlayer1hexes = 0;
+    int nPlayer2hexes = 0;
+    foreach(auto item, m_gHexBoard->getHexes()) {
+        if(item->getOwner() == Player1) {
+            nPlayer1hexes++;
+        }
+        else if(item->getOwner() == Player2) {
+            nPlayer2hexes++;
+        }
+    }
+
+    QString message;
+    if(nPlayer1hexes > nPlayer2hexes) {
+        message = "Player1 has won";
+    }
+    else if(nPlayer2hexes > nPlayer1hexes) {
+        message = "Player2 has won";
+    }
+    else {
+        message = "Tie game";
+    }
+
+    displayGameOverWindow(message);
+
+}
+
+void Game::displayGameOverWindow(QString message) {
+
+    //disable all items in the scene
+    foreach(auto item, m_gScene->items()) {
+        item->setEnabled(false);
+    }
+
+    //pop up semi transparent panel
+    drawPanel(0, 0, 1024, 650, Qt::black, 0.65);
+
+    //draw a panel
+    drawPanel(312, 184, 400, 400, Qt::lightGray, 0.75);
+
+
+
+
+    //create play again button
+    Button* playAgain = new Button(QString("Play Again"));
+    playAgain->setPos(410, 300);
+    m_gScene->addItem(playAgain);
+    connect(playAgain, SIGNAL(clicked()), this, SLOT(restartGame()));
+
+    //create Quit button
+    Button* quit = new Button(QString("Quit"));
+    quit->setPos(410, 375);
+    m_gScene->addItem(quit);
+    connect(quit, SIGNAL(clicked()), this, SLOT(close()));
+
+    //create text
+    QGraphicsTextItem* overText = new QGraphicsTextItem(message);
+    overText->setPos(460, 225);
+    m_gScene->addItem(overText);
+
+
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event) {

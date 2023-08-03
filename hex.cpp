@@ -59,6 +59,11 @@ Hex::Hex(QGraphicsItem *parent)
 
 }
 
+int Hex::getAttackof(int side)
+{
+    return m_lSideAttack[side];
+}
+
 Player Hex::getOwner()
 {
     return m_eOwner;
@@ -137,6 +142,63 @@ void Hex::findNeighbours() {
             if(item !=this && item) {
                 m_lNeighbours.append(item);
                 qDebug()<<item->pos();
+            }
+        }
+    }
+}
+
+void Hex::SwitchOwner() {
+
+    if(getOwner() == Player1) {
+        setOwner(Player2);
+    }
+    else if(getOwner() == Player2) {
+        setOwner(Player1);
+    }
+
+}
+
+void Hex::captureNeighbour() {
+    for(auto i = 0; i < m_lNeighbours.size(); i++) {
+        bool isEnemy = false;
+        bool isNotNuetral = false;
+
+        if(getOwner() != m_lNeighbours[i]->getOwner()) {
+            isEnemy = true;
+        }
+
+        if(m_lNeighbours[i]->getOwner() != Noone) {
+            isNotNuetral = true;
+        }
+
+        //if its enemy and not nuetral
+        if(isEnemy && isNotNuetral) {
+            //find attack of adjacent intersecting sides
+            int thisAttack = 0;
+            int neighboursAttack = 0;
+            switch(i) {
+                case 0: thisAttack = getAttackof(0);
+                        neighboursAttack = m_lNeighbours[0]->getAttackof(3);
+                        break;
+                case 1: thisAttack = getAttackof(1);
+                        neighboursAttack = m_lNeighbours[1]->getAttackof(4);
+                        break;
+                case 2: thisAttack = getAttackof(2);
+                        neighboursAttack = m_lNeighbours[2]->getAttackof(5);
+                        break;
+                case 3: thisAttack = getAttackof(3);
+                        neighboursAttack = m_lNeighbours[3]->getAttackof(0);
+                        break;
+                case 4: thisAttack = getAttackof(4);
+                        neighboursAttack = m_lNeighbours[4]->getAttackof(1);
+                        break;
+                case 5: thisAttack = getAttackof(5);
+                        neighboursAttack = m_lNeighbours[5]->getAttackof(2);
+                        break;
+            }
+
+            if(thisAttack > neighboursAttack) {
+                        m_lNeighbours[i]->SwitchOwner();
             }
         }
     }

@@ -21,6 +21,8 @@ public:
     void setCurrentPlayer(Player nextPlayer);
     void pickUpCard(Hex* card);
     void placeCard(Hex* hexToReplace);
+    void gameOver();
+    void displayGameOverWindow(QString message);
 
     //events
     void mouseMoveEvent(QMouseEvent* event);
@@ -28,6 +30,7 @@ public:
 
 public slots:
     void start();
+    void restartGame();
 
 private:
     void drawPanel(int x, int y, int width, int height, QColor color, double opacity = 0.5);
@@ -51,6 +54,8 @@ private:
     QList<Hex* >m_gPlayer1Cards;
     QList<Hex* >m_gPlayer2Cards;
     std::mt19937 m_rRandomEngine;
+    int m_numCardsPlaced;
+
 };
 
 #endif // GAME_H

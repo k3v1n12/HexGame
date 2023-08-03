@@ -25,6 +25,8 @@ public:
     void displaySideAttack();
     void createLines();
     void findNeighbours();
+    void SwitchOwner();
+    void captureNeighbour();
 
     //event
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
